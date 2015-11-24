@@ -8,10 +8,10 @@
 
 import UIKit
 
-class MasterViewController: UITableViewController {
+class WorkoutViewController: UITableViewController, TagDelegate, RemoveExerciseDelegate {
 
     var detailViewController: DetailViewController? = nil
-    var objects = NSMutableArray()
+    var objects: [Workout] = []
 
 
     override func awakeFromNib() {
@@ -41,7 +41,8 @@ class MasterViewController: UITableViewController {
     }
 
     func insertNewObject(sender: AnyObject) {
-        objects.insertObject(NSDate(), atIndex: 0)
+        let newWorkout = Workout()
+        objects.insert(newWorkout, atIndex: 0)
         let indexPath = NSIndexPath(forRow: 0, inSection: 0)
         self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
     }
@@ -49,10 +50,12 @@ class MasterViewController: UITableViewController {
     // MARK: - Segues
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "showDetail" {
-            if let indexPath = self.tableView.indexPathForSelectedRow() {
-                let object = objects[indexPath.row] as NSDate
-                let controller = (segue.destinationViewController as UINavigationController).topViewController as DetailViewController
+        if segue.identifier == "showExercises" {
+            if let indexPath = self.tableView.indexPathForSelectedRow {
+                let object = objects[indexPath.row]
+                let controller = (segue.destinationViewController as! UINavigationController).topViewController as! ExerciseViewController
+                controller.delegate = self
+                controller.workoutIndex = indexPath.row
                 controller.detailItem = object
                 controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
                 controller.navigationItem.leftItemsSupplementBackButton = true
@@ -71,10 +74,11 @@ class MasterViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("workoutCell", forIndexPath: indexPath) as! WorkoutCell
 
-        let object = objects[indexPath.row] as NSDate
-        cell.textLabel!.text = object.description
+        let object = objects[indexPath.row]
+        
+        cell.setup(object)
         return cell
     }
 
@@ -85,13 +89,44 @@ class MasterViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
-            objects.removeObjectAtIndex(indexPath.row)
+            objects.removeAtIndex(indexPath.row)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         } else if editingStyle == .Insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
         }
     }
 
+    @IBAction func editWorkoutTag(sender: UILongPressGestureRecognizer) {
+        
+        if sender.state == UIGestureRecognizerState.Began{
+            let location = sender.locationInView(self.tableView)
+            let index = self.tableView.indexPathForRowAtPoint(location)
+            
+            if(index != nil){
+                let tagViewController = TagViewController()
+                tagViewController.delegate = self
+                tagViewController.index = index?.row
+                if (UIDevice.currentDevice().userInterfaceIdiom ==  UIUserInterfaceIdiom.Pad) {
+                    let popover = UIPopoverController(contentViewController: tagViewController)
+                    popover.popoverContentSize = CGSize(width: 300, height: 400)
+                    //popover.presentPopoverFromRect(sender, inView: self.view, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: true)
+                }
+                else{
+                    self.presentViewController(tagViewController, animated: true,   completion: nil)
+                }
+            }
+        }
+        
+    }
+    
+    func updateTag(entryTag: String, index: Int) {
+        objects[index].tag = entryTag
+        tableView.reloadData()
+    }
+    
+    func removeExercise(workoutIndex: Int, exerciseIndex: Int){
+        objects[workoutIndex].exercises.removeAtIndex(exerciseIndex)
+    }
 
 }
 
