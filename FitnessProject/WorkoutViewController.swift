@@ -5,6 +5,7 @@
 //  Created by Jason Michael Miletta on 4/1/15.
 //  Copyright (c) 2015 Jason Michael Miletta. All rights reserved.
 //
+// TODO Fix back navigation once inside of a workout
 
 import UIKit
 
@@ -31,7 +32,7 @@ class WorkoutViewController: UITableViewController, TagDelegate, RemoveExerciseD
         self.navigationItem.rightBarButtonItem = addButton
         if let split = self.splitViewController {
             let controllers = split.viewControllers
-            self.detailViewController = controllers[controllers.count-1].topViewController as? DetailViewController
+            self.detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
         }
     }
 

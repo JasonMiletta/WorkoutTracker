@@ -15,7 +15,7 @@ class TagViewController : UIViewController {
     
     @IBOutlet weak var tagTextField: UITextField!
     
-    override init() {
+    init() {
         super.init(nibName: "WorkoutTagEditor", bundle: nil)
     }
     
@@ -25,7 +25,7 @@ class TagViewController : UIViewController {
     
     //TODO update the tag on the workout
     @IBAction func addTag(sender: UIButton) {
-        delegate?.updateTag(tagTextField!.text, index: index)
+        delegate?.updateTag(tagTextField!.text!, index: index)
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
