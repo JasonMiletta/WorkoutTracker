@@ -37,7 +37,7 @@ class ExerciseViewController: UITableViewController, ExerciseDelegate {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showNewExercise" {
-            let controller = (segue.destinationViewController as! UINavigationController).topViewController as! DetailViewController
+            let controller = segue.destinationViewController as! DetailViewController
             controller.delegate = self
             controller.navigationItem.leftBarButtonItem = self.splitViewController?.displayModeButtonItem()
             controller.navigationItem.leftItemsSupplementBackButton = true
@@ -45,7 +45,7 @@ class ExerciseViewController: UITableViewController, ExerciseDelegate {
         if segue.identifier == "showEditExercise" {
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 let object = objects[indexPath.row] as Exercise
-                let controller = (segue.destinationViewController as! UINavigationController).topViewController as! DetailViewController
+                let controller = segue.destinationViewController as! DetailViewController
                 controller.delegate = self
                 controller.detailItem = object
                 controller.index = indexPath.row
