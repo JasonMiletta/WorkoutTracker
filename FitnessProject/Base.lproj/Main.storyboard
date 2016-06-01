@@ -359,7 +359,7 @@
                                 <connections>
                                     <outlet property="dateLabel" destination="ET0-ck-dyp" id="qPr-CR-Db7"/>
                                     <outlet property="entryTagLabel" destination="wBE-qi-iD5" id="e1w-hQ-oj5"/>
-                                    <segue destination="826-sj-9h5" kind="show" id="n5C-S9-bVU"/>
+                                    <segue destination="826-sj-9h5" kind="show" identifier="showExercises" id="n5C-S9-bVU"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>

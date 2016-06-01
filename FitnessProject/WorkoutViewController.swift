@@ -5,7 +5,6 @@
 //  Created by Jason Michael Miletta on 4/1/15.
 //  Copyright (c) 2015 Jason Michael Miletta. All rights reserved.
 //
-// TODO Fix back navigation once inside of a workout
 
 import UIKit
 
@@ -54,7 +53,7 @@ class WorkoutViewController: UITableViewController, TagDelegate, RemoveExerciseD
         if segue.identifier == "showExercises" {
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 let object = objects[indexPath.row]
-                let controller = (segue.destinationViewController as! UINavigationController).topViewController as! ExerciseViewController
+                let controller = segue.destinationViewController as! ExerciseViewController
                 controller.delegate = self
                 controller.workoutIndex = indexPath.row
                 controller.detailItem = object
